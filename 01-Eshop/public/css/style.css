@@ -344,7 +344,7 @@ ol {
 
 .inner-header .main-menu ul li {
 	display: inline-block;
-	margin-left: 60px;
+	margin-left: 42px;
 	position: relative;
 }
 
@@ -2072,7 +2072,7 @@ ol {
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
 	.inner-header .main-menu {
-		margin-right: 70px;
+		margin-right: 42px;
 	}
 	.inner-header .main-menu ul li {
 		margin-left: 45px;

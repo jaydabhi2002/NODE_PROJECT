@@ -22,8 +22,18 @@
     <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
-</head>
+ 
+<script>
+    function addCart(pid)
+    {
+     $.get("addCart",{pid},function(rt){
+         alert(rt)
+     }) 
+   }
+</script>
 
+</head>
+    
 <body>
     <!-- Page Preloder -->
     <div id="preloder">
@@ -44,6 +54,7 @@
     <!-- Header Section Begin -->
    {{>userheaders}}
     <!-- Header Info Begin -->
+    
     <div class="header-info">
         <div class="container-fluid">
             <div class="row">
@@ -144,7 +155,7 @@
             </div>
         </div>
         <!-- Features Box -->
-        <div class="features-box">
+        {{!-- <div class="features-box">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
@@ -184,7 +195,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </section>
     <!-- Features Section End -->
 
@@ -208,19 +219,29 @@
                 </div>
             </div>
             <div class="row" id="product-list">
+                {{#each prodata}}
                 <div class="col-lg-3 col-sm-6 mix all dresses bags">
                     <div class="single-product-item">
                         <figure>
-                            <a href="#"><img src="img/products/img-1.jpg" alt=""></a>
+                            <a href="cart"><img height="200px" width="100px" src="/productimg/{{this.img}}" alt=""></a>
                             <div class="p-status">new</div>
                         </figure>
                         <div class="product-text">
-                            <h6>Green Dress with details</h6>
-                            <p>$22.90</p>
+                            <h6>{{this.pname}}</h6>
+                            <p>RS.{{this.price}}</p>
+                        </div>
+                        <div class="product-text">
+                            <h6>{{this.pname}}</h6>
+                            <div>
+                            <button class="btn btn-sm btn-primary btn-plus" 
+                            onclick="addCart('{{this._id}}')" >Add to Cart
+                            </button> 
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 mix all dresses bags">
+                {{/each}}
+                {{!-- <div class="col-lg-3 col-sm-6 mix all dresses bags">
                     <div class="single-product-item">
                         <figure>
                             <a href="#"><img src="img/products/img-2.jpg" alt=""></a>
@@ -302,14 +323,14 @@
                             <p>$35.50</p>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </section>
     <!-- Latest Product End -->
 
     <!-- Lookbok Section Begin -->
-    <section class="lookbok-section">
+    {{!-- <section class="lookbok-section">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-4 offset-lg-1">
@@ -335,7 +356,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- Lookbok Section End -->
 
     <!-- Logo Section Begin -->

@@ -6,20 +6,33 @@
                 </div>
                 <div class="header-right">
                     <img src="img/icons/search.png" alt="" class="search-trigger">
-                    <img src="img/icons/man.png" alt="">
-                  
+                    {{!-- <img src="img/icons/man.png" alt=""> --}}
+                    <a class="text-dark" href="shopping-cart">Welcome , {{currentuser}}
+                        <img src="img/icons/bag.png" alt="">
+                        {{!-- <span>2</span> --}}
+                    </a>
                 </div>
-                <div class="user-access">
+                <div class="user-access ">
                     <a href="reg">Register</a>
                     <a href="login" class="in">Login</a>
                 </div>
                 <nav class="main-menu mobile-menu">
+                    <div>
                     <ul>
-                        <li><a class="active" href="/">Home</a></li>
-                        <li><a href="shopping-cart">Shop</a> </li>
-                        <li><a href="product-page">Product</a></li>
-                        <li><a href="contact">Contact</a></li>
+                        <li style="margin-left: 20px;"><a class="active" href="/">Home</a></li>
+                        <li style="margin-left: 20px;"><a href="shopping-cart">Shop</a> </li>
+                        <li style="margin-left: 20px;"><a href="product-page">Product</a></li>
+                        <li style="margin-left: 20px;"><a href="contact">Contact</a></li>
+                        {{!-- <li style="margin-left: 20px;"> <a href="Category">Category</a> --}}
+ <select style="margin-left: 20px;">
+    <option value="Category">Category</option>
+    {{#each catdata}}
+    <option value="">{{this.catname}}</option>
+    {{/each}}
+  </select>
+  </li>
                     </ul>
+                    </div>
                 </nav>
             </div>
         </div>
