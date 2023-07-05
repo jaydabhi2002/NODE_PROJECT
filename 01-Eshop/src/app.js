@@ -6,6 +6,8 @@ const path = require("path")
 const hbs = require("hbs")
 const bodyParser =require("body-parser")
 const cookieParser =require("cookie-parser")
+const cors = require('cors')
+app.use(cors())
 
 const PORT=process.env.PORT
 const DB_URL=process.env.DB_URL

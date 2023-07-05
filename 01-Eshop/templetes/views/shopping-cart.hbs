@@ -117,7 +117,7 @@
                         <tr>
                             <th class="product-h">Product</th>
                             <th>Price</th>
-                            <th class="quan">Quantity</th>
+                            <th style="padding-left: 120px;">Quantity</th>
                             <th>Total</th>
                             <th>remove</th>
                         </tr>
@@ -130,20 +130,17 @@
                             {{/each}}
 
                             <td class="price-col">Rs.{{this.price}}</td>
-
-                            {{!-- <td class="quantity-col">
-                                <div class="pro-qty">
-                                    <input type="text" value="{{this.qty}}" onclick="changeQty('{{this._id}}',1)">
-                                </div>
-                            </td> --}}
-                            <td class="align-middle">
+                            
+                            <td class="quantity-col">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-primary btn-minus" onclick="changeQty('{{this._id}}', -1)"> 
                                             <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value="{{this.qty}}">
+                                    
+                                    <input style="background-color: white !important;" type="text"class="form-control form-control-sm bg-secondary text-center" value="{{this.qty}}">
+
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-primary btn-plus" onclick="changeQty('{{this._id}}' , 1)">
                                             <i class="fa fa-plus"></i>
@@ -153,7 +150,7 @@
                             </td>
                           
                             
-                            <td class="total">Rs.{{this.Total}}</td>
+                            <td class="total" style="width: 150px; margin-left: 10px;">Rs.{{this.Total}}</td>
                             
                              {{!-- <td class="align-middle"><a href="removecart?cid={{this._id}}"
                                     class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td> --}}
@@ -222,15 +219,16 @@
                                             {{!-- <td class="total">Rs.{{sum}}</td> --}}
                                             <td class="sub-total">Rs.{{sum}}</td>
                                             <td class="shipping">0</td>
-                                            <td class="total-cart-p">Rs.{{sum}}</td>
+                                            <td class="total-cart-p" id="amt">{{sum}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 text-right">
-                                    <a href="#" class="primary-btn chechout-btn">Proceed to checkout</a>
+                                    <a  class="primary-btn chechout-btn" id="rzp-button1">Proceed to checkout</a>
                                 </div>
+                                 
                             </div>
                         </div>
                     </div>
@@ -340,6 +338,49 @@
     <script src="js/jquery.nice-select.min.js"></script>
     <script src="js/mixitup.min.js"></script>
     <script src="js/main.js"></script>
-</body>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('rzp-button1').onclick = function(e){
+e.preventDefault();
+const amt = document.getElementById("amt").textContent
+fetch("http://127.0.0.1:3000/payment?amt="+amt).then(data=>{
+return data.json()
+}).then(result => {
+ 
+    var options = {
+    "key": "rzp_test_KKlu164SWMUaIG", // Enter the Key ID generated from the Dashboard
+    "amount": result.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Acme Corp",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": result.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        $.get("confirmorder",{pid:response.razorpay_payment_id},
+        function(rt){
+        alert(rt)
+        })
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.open();
+}).catch(error=>{
+    console.log(error);
+})
+}
+</script>
+
+</body>
 </html>

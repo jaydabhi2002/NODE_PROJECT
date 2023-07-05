@@ -7,9 +7,9 @@ router.get("/admin_dashboard",aauth,(req,resp)=>{
     resp.render("admin_dashboard")
 })
 
-router.get("/Users", (req,resp)=>{
-    resp.render("Users")
-})
+// router.get("/Users", (req,resp)=>{
+//     resp.render("users")
+// })
 
 router.get("/Orders", (req,resp)=>{
     resp.render("Orders")
@@ -186,7 +186,31 @@ router.get("/editproduct", async (req, resp) => {
     }
 })
 
+// -----------------------------------Users--------------------------------------------------------
 
+const User = require("../model/user")
+
+router.get("/viewusers",async(req,resp)=>{
+    try {
+        const user = await User.find()
+        resp.render("users",{userdata:user})
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// --------------------------------------orders------------------------------------------------------
+const Order = require("../model/orders")
+router.get("/vieworders",async(req,resp)=>{
+    try {
+        const orderdata = await Order.find();
+        resp.render("orders",{orderdata:orderdata})
+    } catch (error) {
+        console.log(error);
+    }
+    
+
+})
 
 
 module.exports=router

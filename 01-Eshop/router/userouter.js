@@ -79,6 +79,7 @@ router.post("/do_login", async (req, resp) => {
 
 // ---------------------------Cart Page------------------------------------------------------------
 const Cart = require("../model/carts")
+const { Router } = require("express")
 
 router.get("/shopping-cart",auth,async(req,resp)=>{
     const user = req.user
@@ -160,6 +161,96 @@ router.get("/changeQty",auth,async(req,resp)=>{
             {
                 resp.send("updated")
             }
+    } catch (error) {
+        console.log(error);
+    }
+})
+// ---------------------------------------Payment---------------------------------------------------------
+const Razorpay = require("razorpay")
+const Order = require("../model/orders")
+const nodemailer = require('nodemailer')
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'jaydabhi20002@gmail.com',
+      pass: 'cxbutyyoccqzrymo'
+    }
+  });
+
+router.get("/payment",(req,resp)=>{
+    const amt = req.query.amt
+    // console.log(amt);
+    var instance = new Razorpay({
+        key_id: 'rzp_test_KKlu164SWMUaIG',
+        key_secret: 'mzojOTQAhXQQ7NX2o0SbhzGr',
+      });
+
+    
+var options = {
+    amount: Number(amt)*100,  // amount in the smallest currency unit
+    currency: "INR",
+    receipt: "order_rcptid_11"
+  };
+  instance.orders.create(options, function(err, order) {
+    // console.log(order);
+    resp.send(order)
+  });
+})
+
+router.get("/confirmorder",auth,async(req,resp)=>{
+    try {
+        const payid = req.query.pid
+        const uid = req.user._id
+    
+        const cartproduct = await Cart.find({uid:uid})
+        var productlist = [];
+        var alltotal = 0;
+        var row = "";
+        for(var i=0;i<cartproduct.length;i++)
+        {
+          const prod = await product.findOne({_id:cartproduct[i].pid})
+          
+          var pname = prod.pname
+          var price = prod.price
+          var qty = cartproduct[i].qty
+          var total = Number(price)*Number(qty)
+        //   console.log(prod);
+
+        productlist[i] = {
+            pname : pname,
+            price : price,
+            qty : qty,
+            total : total,
+        }
+        alltotal = alltotal+total;
+        row = row+"<tr><td>"+pname+"</td><td>"+price+"</td><td>"+qty+"</td><td>"+total+"</td></tr>"
+        }
+        const order = new Order({
+        payid:payid,
+        uid:uid,
+        product:productlist,
+        total:alltotal,
+        date : Date.now()
+    })
+     const dt = await order.save()
+     await Cart.deleteMany({uid:uid})
+    //  console.log(dt);
+    
+    var mailOptions = {
+        from: 'jaydabhi20002@gmail.com',
+        to: req.user.email,
+        subject: 'Order Conformation',
+        html: "<table border='1'><tr><th>ProductName</th><th>Price</th><th>Qty</th><th>Total</th></tr>"+row+"<tr><td>All Total</td><td>"+alltotal+"</td></tr></table>"
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+            resp.send("Order Confirmed !!!")
+        }
+      });
     } catch (error) {
         console.log(error);
     }
