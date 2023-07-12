@@ -116,6 +116,7 @@
                     <thead>
                         <tr>
                             <th class="product-h">Product</th>
+                            <th>Product Name</th>
                             <th>Price</th>
                             <th style="padding-left: 120px;">Quantity</th>
                             <th>Total</th>
@@ -126,10 +127,12 @@
                         {{#each cartdata}} 
                          <tr>
                             {{#each this.product}}
-                              <td class="align-middle"><img src="productimg/{{this.img}}" alt="{{this.img}}" style="width: 50px;">{{this.pname}}</td>
+                              <td style="flex-direction: row;" class="align-middle"><img src="productimg/{{this.img}}" alt="{{this.img}}" style="width: 80px; justify-content: center; align-items: center;display: flex; background-color: #f2f2f2;"></td>
+
+                             <td><h6>{{this.pname}}</h6></td>
                             {{/each}}
 
-                            <td class="price-col">Rs.{{this.price}}</td>
+                            <td class="price-col">₹ {{this.price}}</td>
                             
                             <td class="quantity-col">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
@@ -139,7 +142,7 @@
                                         </button>
                                     </div>
                                     
-                                    <input style="background-color: white !important;" type="text"class="form-control form-control-sm bg-secondary text-center" value="{{this.qty}}">
+                                    <h1 style="background-color: white !important;" type="text"class="form-control form-control-sm bg-secondary text-center" >{{this.qty}}</h1> 
 
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-primary btn-plus" onclick="changeQty('{{this._id}}' , 1)">
@@ -150,7 +153,7 @@
                             </td>
                           
                             
-                            <td class="total" style="width: 150px; margin-left: 10px;">Rs.{{this.Total}}</td>
+                            <td class="total" style="width: 150px; margin-left: 10px;">₹ {{this.Total}}</td>
                             
                              {{!-- <td class="align-middle"><a href="removecart?cid={{this._id}}"
                                     class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td> --}}

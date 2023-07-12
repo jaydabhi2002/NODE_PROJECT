@@ -11,6 +11,7 @@ router.get("/",async(req,resp)=>{
     try {
         const catdata = await Category.find()
         const prodata = await product.find()
+        // console.log(prodata);
         resp.render("home",{catdata:catdata,prodata:prodata})
     } catch (error) {
         console.log(error);
@@ -18,14 +19,10 @@ router.get("/",async(req,resp)=>{
    
 })
 
-
 router.get("/main", (req,resp)=>{
     resp.render("main")
 })
 
-router.get("/product-page", (req,resp)=>{
-    resp.render("product-page")
-})
 // ----------------------------------USER RAGISTRATION -----------------------------------------------
 const User = require("../model/user")
 const bcrypt = require("bcryptjs")
@@ -79,7 +76,6 @@ router.post("/do_login", async (req, resp) => {
 
 // ---------------------------Cart Page------------------------------------------------------------
 const Cart = require("../model/carts")
-const { Router } = require("express")
 
 router.get("/shopping-cart",auth,async(req,resp)=>{
     const user = req.user
@@ -256,4 +252,18 @@ router.get("/confirmorder",auth,async(req,resp)=>{
     }
 })
 
+// ----------------------------------------Product Page-----------------------------------------------
+
+router.get("/product-page",async(req,resp)=>{
+    try {
+        
+        const id = req.query.pid
+        // console.log(id);
+        const prodata = await product.findOne({_id:id})
+        // console.log(prodata);
+        resp.render("product-page",{prodata:prodata})
+    } catch (error) {
+        console.log(error);
+    }
+})
 module.exports = router
