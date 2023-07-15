@@ -289,7 +289,7 @@ router.get("/check-out",auth,async (req,resp)=>{
 router.post("/do_check",async(req,resp)=>{
     try {
         const checkout = new Checkout(req.body)
-        // await checkout.save()
+        await checkout.save()
         // console.log(checkout);
         resp.redirect("do_payment")
     } catch (error) {
