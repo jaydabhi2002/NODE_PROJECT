@@ -65,12 +65,12 @@
     <!-- Cart Total Page Begin -->
     <section class="cart-total-page spad">
         <div class="container">
-            <form action="" method="" class="checkout-form">
-                <div class="row">
+            <form action="" method="" class="checkout-form ">
+                <div class="row  ">
                     <div class="col-lg-12">
                         <h3>YOUR PAYMENT</h3>
                     </div>
-                    <div class="col-lg-9">
+                    {{!-- <div class="col-lg-9"> --}}
                         {{!-- <div class="row">
                             <div class="col-lg-2">
                                 <p class="in-name">Name*</p>
@@ -124,8 +124,8 @@
                                 <input type="text" name="moblie_no">
                             </div>
                         </div> --}}
-                    </div>
-                    <div class="col-lg-3">
+                    {{!-- </div> --}}
+                    <div class="col-lg-9 main_box " >
                         {{#each cartdata}}
                         <div class="order-table">
                             {{#each this.product}}
