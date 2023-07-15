@@ -65,13 +65,13 @@
     <!-- Cart Total Page Begin -->
     <section class="cart-total-page spad">
         <div class="container">
-            <form action="do_check" method="post" class="checkout-form">
+            <form action="" method="" class="checkout-form">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h3>Your Information</h3>
+                        <h3>YOUR PAYMENT</h3>
                     </div>
                     <div class="col-lg-9">
-                        <div class="row">
+                        {{!-- <div class="row">
                             <div class="col-lg-2">
                                 <p class="in-name">Name*</p>
                             </div>
@@ -123,9 +123,9 @@
                             <div class="col-lg-10">
                                 <input type="text" name="moblie_no">
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
-                    {{!-- <div class="col-lg-3">
+                    <div class="col-lg-3">
                         {{#each cartdata}}
                         <div class="order-table">
                             {{#each this.product}}
@@ -148,26 +148,26 @@
                             </div>
                     {{/each}}
 
-                            <div class="cart-total">
+                            <div class="cart-total" >
                                 <span>Total</span>
-                                <p id="amt">₹ {{sum}}</p>
+                                <p id="amt">{{sum}}</p>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="payment-method">
-                            {{!-- <h3>Payment</h3> --}}
-                            {{!-- <ul>
+                            <h3>Payment</h3>
+                            <ul>
                                 <li>Paypal <img src="img/paypal.jpg" alt=""></li>
                                 <li>Credit / Debit card <img src="img/mastercard.jpg" alt=""></li>
                                 <li>
                                     <label for="two">Pay when you get the package</label>
                                     <input type="radio" id="two">
                                 </li>
-                            </ul> --}}
-                            <button  type="submit">PROCESS TO PAY</button>
+                            </ul>
+                            <button  id="rzp-button1">Place your order</button>
                         </div>
                     </div>
                 </div>
@@ -275,3 +275,50 @@
     <script src="js/mixitup.min.js"></script>
     <script src="js/main.js"></script>
 
+    
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('rzp-button1').onclick = function(e){
+e.preventDefault();
+const amt = document.getElementById("amt").textContent
+fetch("http://127.0.0.1:3000/payment?amt="+amt).then(data=>{
+return data.json()
+}).then(result => {
+ 
+    var options = {
+    "key": "rzp_test_KKlu164SWMUaIG", // Enter the Key ID generated from the Dashboard
+    "amount": result.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Acme Corp",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": result.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        $.get("confirmorder",{pid:response.razorpay_payment_id},
+        function(rt){
+        alert(rt)
+        })
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.open();
+}).catch(error=>{
+    console.log(error);
+})
+}
+</script>
+
+</body>
+
+</html>

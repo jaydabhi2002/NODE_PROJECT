@@ -3,6 +3,7 @@ const auth = require("../middleware/auth")
 const Category = require("../model/categories")
 const product = require("../model/product")
 
+
 router.get("/contact", (req,resp)=>{
     resp.render("contact")
 })
@@ -16,7 +17,6 @@ router.get("/",async(req,resp)=>{
     } catch (error) {
         console.log(error);
     }
-   
 })
 
 router.get("/main", (req,resp)=>{
@@ -100,7 +100,6 @@ router.get("/shopping-cart",auth,async(req,resp)=>{
 router.get("/addCart",auth,async(req,resp)=>{
     const pid = req.query.pid
     const uid = req.user._id
-    
     try {
         const pdata = await product.findOne({_id:pid})
         const cartdata = await Cart.findOne({pid:pid})
@@ -266,4 +265,54 @@ router.get("/product-page",async(req,resp)=>{
         console.log(error);
     }
 })
+// -----------------------------------------checkout-----------------------------------------------------
+const Checkout = require("../model/checkout")
+router.get("/check-out",auth,async (req,resp)=>{
+    const user = req.user
+    try {
+        // const cartdata = await Cart.find({uid:user._id})
+        const cartdata = await Cart.aggregate([{$match:{uid:user._id}},{$lookup:{from:"products",localField:"pid",foreignField:"_id",as:"product"}}])
+        // console.log(cartdata[0].product[0]);
+        var sum = 0;
+        for (let i = 0; i < cartdata.length; i++) {
+            // console.log(cartdata[i].Total);
+            sum = sum+cartdata[i].Total
+        }
+        // console.log(sum);
+
+        resp.render("check-out", { currentuser: user.uname, cartdata: cartdata,sum:sum})
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.post("/do_check",async(req,resp)=>{
+    try {
+        const checkout = new Checkout(req.body)
+        // await checkout.save()
+        // console.log(checkout);
+        resp.redirect("do_payment")
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.get("/do_payment",auth,async(req,resp)=>{
+    const user = req.user
+    try {
+         // const cartdata = await Cart.find({uid:user._id})
+         const cartdata = await Cart.aggregate([{$match:{uid:user._id}},{$lookup:{from:"products",localField:"pid",foreignField:"_id",as:"product"}}])
+         // console.log(cartdata[0].product[0]);
+         var sum = 0;
+         for (let i = 0; i < cartdata.length; i++) {
+             // console.log(cartdata[i].Total);
+             sum = sum+cartdata[i].Total
+         }
+        resp.render("payment", { currentuser: user.uname, cartdata: cartdata,sum:sum});
+        
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 module.exports = router

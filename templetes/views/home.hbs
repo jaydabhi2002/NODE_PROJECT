@@ -24,12 +24,19 @@
     <link rel="stylesheet" href="css/style.css" type="text/css">
  
 <script>
-    function addCart(pid)
-    {
-     $.get("addCart",{pid},function(rt){
-         alert(rt)
-     }) 
-   }
+    const addCart = (pid) => {
+       let data = document.cookie  {{!-- get cookie --}}
+       console.log(data)
+
+       if(data){
+       $.get("addCart",{pid},function(rt){
+            alert(rt)
+       });
+
+       }else{
+        window.location.href = "http://localhost:3000/login";
+       }
+     }
 </script>
 
 </head>
@@ -231,7 +238,6 @@
                             <p>₹ {{this.price}}</p>
                         </div>
                         <div class="product-text">
-                            {{!-- <h6>{{this.pname}}</h6> --}}
                             <div>
                             <button class="btn btn-sm btn-primary btn-plus" 
                             onclick="addCart('{{this._id}}')" >Add to Cart
