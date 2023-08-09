@@ -14,7 +14,7 @@ const DB_URL=process.env.DB_URL
 
 app.use(express.json())
 mongoose.connect(DB_URL).then(()=>{
-    console.log("My DataBase Connted");
+console.log("My DataBase Connted");
 }).catch(error=>{
     console.log(error);
 })
